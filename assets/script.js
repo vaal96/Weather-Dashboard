@@ -1,7 +1,7 @@
 // 3812ab6b9245b50574b00ffacfcd2e36 
 var Wkey = "3812ab6b9245b50574b00ffacfcd2e36";
 var button = document.querySelector('.btn');
-var inputCity = document.querySelector('.form-input');
+// var inputCity = document.querySelector('.form-input');
 var searchHistory = [];
 var form = $("#search-form");
 var searchInput = $("#search-input");
@@ -35,37 +35,59 @@ function handleFormSubmit(event) {
   event.preventDefault();
   var query = searchInput.val().trim();
   if (query) {
-    searchWeather(query);
+    searchWeather();
     searchInput.val("");
     addSearchToHistory(query);
   }
-}
+};
 // Accepts a query and fetches data from the giphy api.
-function searchWeather(query) {
+
   //var requestUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + inputCity.val + "&appid=3812ab6b9245b50574b00ffacfcd2e36";
-  var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + inputCity.value + "&appid=3812ab6b9245b50574b00ffacfcd2e36";  
+  // var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + inputCity.value + "&appid=3812ab6b9245b50574b00ffacfcd2e36";  
+  
+// api 
+
+function searchWeather() {   
+  var inputCity = document.querySelector('.form-input').value;
+
+  var cityURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + inputCity +"&limit=1&appid=3812ab6b9245b50574b00ffacfcd2e36"
+  fetch(cityURL)
+  .then(function(response){
+   return response.json();
+  })
+  .then(function(data){
+    console.log(data)
+  //  lat = data[0].lat;
+  //  lon = data[0].lon;
+  })
+const lat = data[0].lat;
+const lon = data[0].lon;
+  var queryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=hourly,minutely,alerts&units=imperial&appid=3812ab6b9245b50574b00ffacfcd2e36" 
   fetch(queryURL)
     .then(function (response) {
       return response.json();
     })
     .then(function (data) {
-      resultsContainer.empty();
-      for (var i = 0; i < data.data; i++) {
-        displayWeather(data.data[i]);
-      }
-    });
-}
-// display?
-function displayWeather(weatherResult) {
-  var title = weatherResult.title;
-  var img = $("<img>").attr({
-    src: imgUrl,
-    class: "img-fluid",
-    alt: title,
-  });
-  var col = $("<div>").addClass("col-12 col-lg-6 pb-4").append(img);
-  resultsContainer.append(col);
-}
+      var weather = data[0].weather;
+      console.log(weather);
+      var speed = data[0].speed;
+      var wind = data[0].wind;
+      var temp = data[0].temperature;
+      displayWeather(data.data[i]);
+      });
+};
+// display? !!!!! 
+// function displayWeather(weatherResult) {
+//   console.log(weatherResult);
+//   var title = weatherResult.title;
+//   var img = $("<img>").attr({
+//     src: imgUrl,
+//     class: "img-fluid",
+//     alt: title,
+//   });
+//   var col = $("<div>").addClass("col-12 col-lg-6 pb-4").append(img);
+//   resultsContainer.append(col);
+
 //function displayResults(weatherResults) {
     // Var temp =
     // Var Uv =
