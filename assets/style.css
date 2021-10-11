@@ -5,3 +5,13 @@
     text-align: center;
     
 }
+#theResults{
+
+}
+
+.cardBody {
+border-style: solid;
+border: 2px solid red;
+border-radius: 8px;
+padding: 5px;
+}

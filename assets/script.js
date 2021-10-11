@@ -1,28 +1,11 @@
-// 3812ab6b9245b50574b00ffacfcd2e36 
 var Wkey = "3812ab6b9245b50574b00ffacfcd2e36";
-var button = document.querySelector('.btn');
-// var inputCity = document.querySelector('.form-input');
+//var button = document.querySelector('.btn');
+//var inputCity = document.querySelector('.form-input');
 var searchHistory = [];
 var form = $("#search-form");
-var searchInput = $("#search-input");
+var searchInput = $("#search-city-input");
 var resultsContainer = $("#result-content");
 var searchHistoryContainer = $("#search-history");
-// var city;
-//var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + inputCity.value + "&appid=3812ab6b9245b50574b00ffacfcd2e36";
-// var city = input('Search for a City : ');
-// var rq = requests.get(url);
-// inputCity.innerHTML = ; 
-// print(rq);
-// user input 
-// store it in my variable
-
-// "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + WKey;
-// button.addEventListener('click', function(){
-//     fetch(queryURL)
-//     .then(response => response.json())
-//     .then(data => console.log(data))
-//     .catch(err => alert("Wrong City Search!"))
-// });
 
 // init search history
 searchHistory = localStorage.getItem("search-history");
@@ -31,69 +14,86 @@ if (searchHistory) {
 } else {
   searchHistory = [];
 }
+
 function handleFormSubmit(event) {
   event.preventDefault();
   var query = searchInput.val().trim();
   if (query) {
-    searchWeather();
-    searchInput.val("");
-    addSearchToHistory(query);
+    searchWeather(query);
+//    searchInput.value(); dont need!
+//    addSearchToHistory(query);
   }
 };
-// Accepts a query and fetches data from the giphy api.
 
-  //var requestUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + inputCity.val + "&appid=3812ab6b9245b50574b00ffacfcd2e36";
-  // var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + inputCity.value + "&appid=3812ab6b9245b50574b00ffacfcd2e36";  
-  
-// api 
+function searchWeather(query) {   
 
-function searchWeather() {   
-  var inputCity = document.querySelector('.form-input').value;
-
-  var cityURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + inputCity +"&limit=1&appid=3812ab6b9245b50574b00ffacfcd2e36"
+  var cityURL = "http://api.openweathermap.org/geo/1.0/direct?q="+query+"&limit=1&appid=3812ab6b9245b50574b00ffacfcd2e36"
   fetch(cityURL)
   .then(function(response){
    return response.json();
   })
   .then(function(data){
-    console.log(data)
-  //  lat = data[0].lat;
-  //  lon = data[0].lon;
-  })
-const lat = data[0].lat;
-const lon = data[0].lon;
-  var queryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=hourly,minutely,alerts&units=imperial&appid=3812ab6b9245b50574b00ffacfcd2e36" 
-  fetch(queryURL)
-    .then(function (response) {
-      return response.json();
+   var lat = data[0].lat;
+   var lon = data[0].lon;
+   var cityName = data[0].name;
+   var queryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" +lat+ "&lon=" +lon+ "&exclude=minutely,hourly,alerts&appid=3812ab6b9245b50574b00ffacfcd2e36" 
+
+   fetch(queryURL)
+   .then(function (response) {
+     return response.json();
     })
     .then(function (data) {
-      var weather = data[0].weather;
-      console.log(weather);
-      var speed = data[0].speed;
-      var wind = data[0].wind;
-      var temp = data[0].temperature;
-      displayWeather(data.data[i]);
-      });
-};
-// display? !!!!! 
-// function displayWeather(weatherResult) {
-//   console.log(weatherResult);
-//   var title = weatherResult.title;
-//   var img = $("<img>").attr({
-//     src: imgUrl,
-//     class: "img-fluid",
-//     alt: title,
-//   });
-//   var col = $("<div>").addClass("col-12 col-lg-6 pb-4").append(img);
-//   resultsContainer.append(col);
-
-//function displayResults(weatherResults) {
-    // Var temp =
-    // Var Uv =
-    // Etc and then add and append
-   
+      console.log(data);
+      console.log(data.current.temp);
+      console.log(data.current.humidity);
+      console.log(data.current.uvi);
+      console.log(data.current.wind_speed);
+      console.log(data.current.weather[0].icon)
+      console.log(data.daily[0].weather[0].icon)
+      console.log(data.daily[0].temp.min);
+      console.log(data.daily[0].humidity);
+      console.log(data.daily[0].wind_speed); //couldnt get speed
+      displayCurrentDay(data, cityName);
+      displayFiveDay(data)
+    });
+  })
     
+};
+function displayCurrentDay(data, cityName){
+  $("#city-searched").empty()
+  var citySearchedData = `<h1>${cityName}</h1>
+  <p>Temp: ${data.current.temp}</p>
+  <p>Humidity: ${data.current.humidity} </p>
+  <p>Wind: ${data.current.wind_speed}</p>
+  <img src="https://openweathermap.org/img/w/${data.current.weather[0].icon}.png" />
+  <p>UVI: ${data.current.uvi}</p>`
+  $("#city-searched").append(citySearchedData)
+}
+
+function displayFiveDay(data){
+  $("#five-day-forecast").empty()
+  var heading = `<h2 class="col-12">5 Day Forecast</h2>`
+  $("#five-day-forecast").append(heading) 
+  for (let index = 1; index <= 5; index++) {
+    const element = `<div class="card col-2 bg-primary text-white mr-2">
+    <div class="card-body">
+        <p>Date</p>  
+        <p>Temp: ${data.daily[index].temp.min}</p>
+        <p>Hum</p>
+        <p>Wind</p>
+        <p>UV</p>
+    </div>
+</div>`
+$("#five-day-forecast").append(element)
+
+    
+  }
+
+}
+
+
+
+
 function displayButtons() {
   searchHistoryContainer.empty();
   // loop over searchHistory
@@ -107,6 +107,7 @@ function displayButtons() {
     searchHistoryContainer.append(button);
   }
 }
+
 function handleSearchClick() {
   searchWeather(this.textContent);
 }
@@ -114,9 +115,18 @@ function addSearchToHistory(query) {
   searchHistory.push(query);
   localStorage.setItem("search-history", JSON.stringify(searchHistory));
   displayButtons();
-}
+  for(var i=searchHistory.length-1; i >-1; i--){
+    var citiesSearched = searchHistory[i];
+
+    var historyButton = document.createElement('button')
+
+    historyButton.textContent = citiesSearched;
+    historyButton.setAttribute('data-index', i);
+    historyButton.setAttribute('class', 'btn btn-primary');
+    searchHistory.append(historyButton);
+  }
+};
 
 form.on("submit", handleFormSubmit);
 searchHistoryContainer.on("click", ".btn-search", handleSearchClick);
 displayButtons();
-
