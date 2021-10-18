@@ -27,7 +27,7 @@ function handleFormSubmit(event) {
 
 function searchWeather(query) {   
 
-  var cityURL = "http://api.openweathermap.org/geo/1.0/direct?q="+query+"&limit=1&appid=3812ab6b9245b50574b00ffacfcd2e36"
+  var cityURL = "https://api.openweathermap.org/geo/1.0/direct?q="+query+"&limit=1&appid=3812ab6b9245b50574b00ffacfcd2e36"
   fetch(cityURL)
   .then(function(response){
    return response.json();
@@ -77,11 +77,11 @@ function displayFiveDay(data){
   for (let index = 1; index <= 5; index++) {
     const element = `<div class="card col-2 bg-primary text-white mr-2">
     <div class="card-body">
-        <p>Date</p>  
+        <p>Date: </p>  
         <p>Temp: ${data.daily[index].temp.min}</p>
-        <p>Hum</p>
-        <p>Wind</p>
-        <p>UV</p>
+        <p>Hum: ${data.daily[index].humidity}</p>
+        <p>Wind: ${data.daily[index].wind_speed}</p>
+        <p>UVI: ${data.daily[index].uvi}</p>
     </div>
 </div>`
 $("#five-day-forecast").append(element)
@@ -89,7 +89,6 @@ $("#five-day-forecast").append(element)
     
   }
 
-}
 
 
 
@@ -101,16 +100,29 @@ function displayButtons() {
     var button = $("<button>")
       .attr({
         type: "button",
-        class: "btn btn-outline-secondary btn-block btn-search",
+        class: "btn btn-secondary btn-block btn-search",
       })
       .text(searchHistory[i]);
     searchHistoryContainer.append(button);
+
   }
 }
 
 function handleSearchClick() {
   searchWeather(this.textContent);
 }
+// trying --
+
+// function addSearchToHistory(query){
+//   searchHistory.push(query)
+//   localStorage.setItem("search-history", JSON.stringify(searchHistory));
+
+
+  
+
+// }
+
+//--------------------PREVIOUS CODE -------------------------//
 function addSearchToHistory(query) {
   searchHistory.push(query);
   localStorage.setItem("search-history", JSON.stringify(searchHistory));
@@ -130,3 +142,4 @@ function addSearchToHistory(query) {
 form.on("submit", handleFormSubmit);
 searchHistoryContainer.on("click", ".btn-search", handleSearchClick);
 displayButtons();
+//--------------------PREVIOUS CODE -------------------------//
