@@ -68,7 +68,7 @@ function displayCurrentDay(data, cityName){
   <img src="https://openweathermap.org/img/w/${data.current.weather[0].icon}.png" />
   <p>UVI: ${data.current.uvi}</p>`
   $("#city-searched").append(citySearchedData)
-}
+};
 
 function displayFiveDay(data){
   $("#five-day-forecast").empty()
@@ -86,8 +86,7 @@ function displayFiveDay(data){
 </div>`
 $("#five-day-forecast").append(element)
 
-    
-  }
+};
 
 
 
@@ -111,16 +110,8 @@ function displayButtons() {
 function handleSearchClick() {
   searchWeather(this.textContent);
 }
-// trying --
 
-// function addSearchToHistory(query){
-//   searchHistory.push(query)
-//   localStorage.setItem("search-history", JSON.stringify(searchHistory));
-
-
-  
-
-// }
+};
 
 //--------------------PREVIOUS CODE -------------------------//
 function addSearchToHistory(query) {
@@ -142,4 +133,3 @@ function addSearchToHistory(query) {
 form.on("submit", handleFormSubmit);
 searchHistoryContainer.on("click", ".btn-search", handleSearchClick);
 displayButtons();
-//--------------------PREVIOUS CODE -------------------------//
